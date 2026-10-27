@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lughat AI – Urdu-first dictionary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;600&family=Noto+Nastaliq+Urdu:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="window-shell">
+      <aside class="sidebar" data-collapsed="false">
+        <div class="sidebar__brand">
+          <div class="sidebar__logo">ل</div>
+          <div class="sidebar__meta">
+            <span class="eyebrow">Lughat AI</span>
+            <strong>Urdu-first</strong>
+          </div>
+          <button class="sidebar__collapse" id="collapse-btn" aria-label="Collapse sidebar">⟨</button>
+        </div>
+        <nav class="nav">
+          <button class="nav__item is-active" data-route="search">🔍 <span>Search</span></button>
+          <button class="nav__item" data-route="favorites">★ <span>Favorites</span></button>
+          <button class="nav__item" data-route="history">🕘 <span>History</span></button>
+          <button class="nav__item" data-route="wotd">📅 <span>Word of the Day</span></button>
+          <button class="nav__item" data-route="ai">🤖 <span>AI Tools</span></button>
+          <button class="nav__item" data-route="profile">👤 <span>Profile</span></button>
+          <button class="nav__item" data-route="settings">⚙️ <span>Settings</span></button>
+        </nav>
+        <div class="sidebar__footer">
+          <div class="sidebar__status">
+            <div class="status-dot"></div>
+            <div class="status-text" id="status">Ready</div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="search-bar">
+            <form id="search-form" class="search-form" autocomplete="off">
+              <div class="input-group">
+                <span class="input-icon">🔎</span>
+                <input
+                  id="query"
+                  name="query"
+                  placeholder="Search word, phrase, or sentence"
+                  aria-label="Search"
+                />
+              </div>
+              <div class="selector-group">
+                <select id="source-lang" name="source">
+                  <option value="auto">Auto</option>
+                  <option value="en">English</option>
+                  <option value="ur">Urdu</option>
+                </select>
+                <span class="arrow">→</span>
+                <select id="target-lang" name="target">
+                  <option value="ur">Urdu</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+              <button type="submit" class="btn primary">Search</button>
+            </form>
+          </div>
+
+          <div class="topbar__actions">
+            <button id="mic-btn" class="icon-btn" title="Speech to text">🎤</button>
+            <button id="ocr-btn" class="icon-btn" title="Image scan (OCR)">📷</button>
+            <input id="ocr-input" type="file" accept="image/*" hidden />
+            <button id="theme-toggle" class="icon-btn" title="Toggle theme">🌗</button>
+            <div class="profile-chip" id="profile-chip">
+              <div class="avatar">A</div>
+              <div>
+                <div class="chip-label">Guest</div>
+                <small class="muted">Local profile</small>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="content">
+          <section class="page" data-route="search">
+            <div class="grid">
+              <div class="card stretch" id="result-card">
+                <div class="result-placeholder">Start typing to see results.</div>
+                <div id="result"></div>
+              </div>
+              <div class="card stack">
+                <div class="card__header">
+                  <div>
+                    <p class="eyebrow">AI Urdu Assist</p>
+                    <strong>Enhance or clarify instantly</strong>
+                  </div>
+                  <button id="tts-btn" class="ghost">🔊 Pronounce</button>
+                </div>
+                <div class="pill-row" id="ai-actions">
+                  <button class="pill" data-ai-mode="explain" data-label="Explain Simply">Explain Simply</button>
+                  <button class="pill" data-ai-mode="clarify" data-label="Clarify">Clarify</button>
+                  <button class="pill" data-ai-mode="grammar" data-label="Fix Grammar">Fix Grammar</button>
+                  <button class="pill" data-ai-mode="rephrase" data-label="Rephrase">Rephrase</button>
+                  <button class="pill" data-ai-mode="formal" data-label="Make Formal">Make Formal</button>
+                  <button class="pill" data-ai-mode="casual" data-label="Make Casual">Make Casual</button>
+                </div>
+                <textarea id="notes" class="notes" rows="5" placeholder="AI will write here or add your own notes…"></textarea>
+                <div class="action-row">
+                  <button id="save-note" class="ghost">Save Note</button>
+                  <div class="muted" id="note-status"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" data-route="favorites" hidden>
+            <div class="card">
+              <div class="card__header">
+                <div>
+                  <p class="eyebrow">Favorites</p>
+                  <strong>Saved words</strong>
+                </div>
+                <div class="filters">
+                  <input id="favorites-search" placeholder="Search favorites" />
+                  <select id="favorites-sort">
+                    <option value="recent">Recent</option>
+                    <option value="az">A → Z</option>
+                  </select>
+                </div>
+              </div>
+              <div class="card-grid" id="favorites-grid"></div>
+            </div>
+          </section>
+
+          <section class="page" data-route="history" hidden>
+            <div class="card">
+              <div class="card__header">
+                <div>
+                  <p class="eyebrow">History</p>
+                  <strong>Recent lookups</strong>
+                </div>
+                <button id="clear-history" class="ghost">Clear all</button>
+              </div>
+              <div class="history-groups" id="history-groups"></div>
+            </div>
+          </section>
+
+          <section class="page" data-route="wotd" hidden>
+            <div class="card">
+              <div class="card__header">
+                <div>
+                  <p class="eyebrow">Word of the Day</p>
+                  <strong id="wotd-word">—</strong>
+                </div>
+                <div class="muted" id="wotd-date"></div>
+              </div>
+              <p id="wotd-meaning" class="urdu"></p>
+              <p id="wotd-example" class="muted"></p>
+            </div>
+          </section>
+
+          <section class="page" data-route="ai" hidden>
+            <div class="card stack">
+              <div class="card__header">
+                <div>
+                  <p class="eyebrow">AI Studio</p>
+                  <strong>Freeform Urdu AI tools</strong>
+                </div>
+              </div>
+              <textarea id="ai-text" rows="6" placeholder="Paste any text for explanation, grammar check, or rewrite…"></textarea>
+              <div class="pill-row" id="ai-studio-actions"></div>
+              <div class="ai-output" id="ai-output"></div>
+            </div>
+          </section>
+
+          <section class="page" data-route="profile" hidden>
+            <div class="card">
+              <div class="card__header">
+                <div>
+                  <p class="eyebrow">Profile</p>
+                  <strong>Mode & stats</strong>
+                </div>
+              </div>
+              <div class="profile-form">
+                <label>
+                  Display name
+                  <input id="profile-name" placeholder="Guest" />
+                </label>
+                <label>
+                  Mode
+                  <select id="profile-mode">
+                    <option value="guest">Guest (local only)</option>
+                    <option value="local">Signed-in ready</option>
+                  </select>
+                </label>
+                <button id="profile-save" class="btn primary">Save profile</button>
+                <div class="stats" id="profile-stats"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" data-route="settings" hidden>
+            <div class="card">
+              <div class="card__header">
+                <div>
+                  <p class="eyebrow">Settings</p>
+                  <strong>Appearance & preferences</strong>
+                </div>
+              </div>
+              <div class="settings-grid">
+                <label>
+                  Theme
+                  <select id="settings-theme">
+                    <option value="system">System</option>
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                  </select>
+                </label>
+                <label>
+                  Preferred target language
+                  <select id="settings-target">
+                    <option value="ur">Urdu</option>
+                    <option value="en">English</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="/src/renderer.ts"></script>
+  </body>
+</html>
